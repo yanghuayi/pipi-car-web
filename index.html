@@ -69,6 +69,18 @@
       $('.start-btn').click(function () {
         $(this).addClass('active');
       });
+      $.ajax({
+        type: 'GET',
+        async: false,
+        url: 'http://monitor.mysirui.com/om/om/getDeviceStatus?search=imei_869651023637275',
+        dataType: 'jsonp',
+        success: function (data) {
+          console.log(data);
+        },
+        error: function (err) {
+          console.log(err);
+        }
+      })
     });
   </script>
 </body>
