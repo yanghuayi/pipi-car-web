@@ -4,8 +4,7 @@ var gulp = require('gulp'),
     runSequence = require('run-sequence'),
     del = require('del'),
     concat = require('gulp-concat'),
-    rename = require('gulp-rename'),
-    uglify = require('gulp-uglify');
+    rename = require('gulp-rename');
 var csso = require('gulp-csso');
 var gutil = require('gulp-util');
 var plumber = require('gulp-plumber');
@@ -36,7 +35,7 @@ gulp.task('less',function(){
 
 gulp.task('images', function() {
   return gulp.src('images/**/*')
-    .pipe(smushit({ verbose: true}))
+    // .pipe(smushit({ verbose: true}))
     .pipe(gulp.dest('dist/images'))
 });
 
@@ -48,6 +47,7 @@ gulp.task('clean', function() {
 gulp.task('connect', function () {
     connect.server({
         root: '',
+        host: '192.168.6.239',
         livereload: true,
         port: 3000
     });
@@ -71,15 +71,11 @@ gulp.task('html', function () {
 gulp.task('minifyjs', function() {
     return gulp.src('js/*.js')
         .pipe(order([
-          'jquery.1.11.1.min.js',
+          'jquery.min.js',
           '*.js'
         ]))
         .pipe(concat('main.js'))    //合并所有js到main.js
         .pipe(gulp.dest('dist/js'))    //输出main.js到文件夹
-        .pipe(rename({suffix: '.min'}))   //rename压缩后的文件名
-        .pipe(uglify().on('error', function (e) {
-            console.log(e);
-        }))    //压缩
         .pipe(gulp.dest('dist/js'));  //输出
 });
 

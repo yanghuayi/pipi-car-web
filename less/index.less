@@ -1,0 +1,168 @@
+.home {
+  height: 100vh;
+  background: url('../images/ditu@2x.png');
+  background-size: cover;
+  .header {
+    height: 60px;
+    color: #fff;
+    line-height: 60px;
+    position: relative;
+    .iconfont {
+      color: #fff;
+    }
+    .left-icon {
+      position: absolute;
+      width: 60px;
+      text-align: center;
+      font-size: 22px;
+    }
+    .title {
+      text-align: center;
+      font-size: 16px;
+      .arrow {
+        position: relative;
+        top: 2px;
+      }
+    }
+  }
+  .car-box {
+    height: 30%;
+    background-image: url('../images/che@2x.png');
+    background-size: 80% auto;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .state-one {
+    height: 50px;
+    position: relative;
+    .iconfont {
+      font-size: 26px;
+      color: #fff;
+      width: 50px;
+      text-align: center;
+      display: inline-block;
+    }
+    .right-icon {
+      float: right;
+    }
+  }
+  .state-two {
+    background: url('../images/fengexian2@2x.png') top center no-repeat;
+    background-size: 100% auto;
+    height: 110px;
+    .bg-btm {
+      height: 100%;
+      background: url('../images/fengexian@2x.png') bottom center no-repeat;
+      background-size: 100% auto;
+    }
+    .state-list {
+      li {
+        height: 100%;
+        vertical-align: middle;
+        width: 17.5%;
+        float: left;
+        text-align: center;
+        padding-top: 30px;
+        .iconfont {
+          display: block;
+          font-size: 30px;
+          color: #fff;
+        }
+        .txt {
+          font-size: 14px;
+          line-height: 30px;
+        }
+        &.center {
+          width: 30%;
+          height: 110px;
+          background: url('../images/qidong@2x.png') center no-repeat;
+          background-size: 60% auto;
+          background-position: center top 15px;
+          position: relative;
+          .hover {
+            height: 110px;
+            position: absolute;
+            top: -6px;
+            z-index: 999;
+            width: 100%;
+            animation: circle 6s linear infinite;
+          }
+          &.active .hover {
+            background: url('../images/qidongquan@2x.png') center no-repeat;
+            background-size: 72% auto;
+            background-position: center top 15px;
+          }
+        }
+      }
+    }
+  }
+  .state-three {
+    margin-top: 40px;
+    .state-list {
+      display: table;
+      li {
+        display: table-cell;
+        text-align: center;
+        width: 1%;
+        .btn {
+          height: 60px;
+          display: block;
+          transition: all .3s ease-in-out;
+        }
+        .txt {
+          line-height: 40px;
+          font-size: 16px;
+        }
+        &:nth-child(1) {
+          .top {
+            height: 40px;
+            background: url('../images/shangsuo_1@2x.png') center no-repeat;
+            background-size: 70% auto;
+            margin-bottom: 10px;
+            &:active {
+              background-image: url('../images/shangsuo ing@2x.png');
+            }
+          }
+          .bottom {
+            height: 40px;
+            background-image: url('../images/jiesuo ing@2x.png');
+            background: url('../images/jiesuo_1@2x.png') center no-repeat;
+            background-size: 70% auto;
+            &:active {
+              background-image: url('../images/jiesuo ing@2x.png');
+            }
+          }
+        }
+        &:nth-child(2) {
+          .btn {
+            height: 80px;
+            background: url('../images/xihuo@2x.png') center no-repeat;
+            background-size: 70% auto;
+            &:active {
+              background-image: url('../images/xihuo ing@2x.png');
+            }
+          }
+        } 
+        &:nth-child(3) {
+          .btn {
+            height: 80px;
+            background: url('../images/xunche@2x.png') center no-repeat;
+            background-size: 70% auto;
+            &:active {
+              background-image: url('../images/xunche ing@2x.png');
+            }
+          }
+        } 
+      }
+    }
+  }
+}
+
+@keyframes circle {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
