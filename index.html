@@ -64,23 +64,35 @@
   </div>
   <script type="text/javascript" src="./dist/js/main.js"></script>
   <script type="text/javascript">
-    $(function () {
-      way.set('home', {name: '渝B·CJ111'});
-      $('.start-btn').click(function () {
-        $(this).addClass('active');
-      });
+    var pageData = {};
+    function update () {
       $.ajax({
         type: 'GET',
         async: false,
         url: 'http://monitor.mysirui.com/om/om/getDeviceStatus?search=imei_869651023637275',
         dataType: 'jsonp',
         success: function (data) {
-          console.log(data);
+          if (data.result.resultCode == 3) {
+            // 登陆超时
+            window.location.href = 'login.html';
+          } else if (data.result.resultCode) {
+            // 其他请求错误类型
+          } else {
+            // 获取数据成功
+            pageData = data.entity[0];
+          }
         },
         error: function (err) {
           console.log(err);
         }
-      })
+      });
+    }
+    $(function () {
+      way.set('home', {name: '渝B·CJ111'});
+      $('.start-btn').click(function () {
+        $(this).addClass('active');
+      });
+      update();
     });
   </script>
 </body>

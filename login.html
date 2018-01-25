@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">  
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="./dist/css/main.css">
+  <title>安装测试工具</title>
+</head>
+<body class="login-body">
+  <div class="login-box">
+    <h1 class="title">安装测试工具</h1>
+    <form class="loginForm">
+        <input type="text" class="username" name="username" placeholder="用户名" />
+        <input type="password" class="password" placeholder="密码" />
+        <div class="code-wrap">
+          <input type="text" class="code" placeholder="验证码">
+          <img class="code-img" src="http://monitor.mysirui.com/provider/testProvide/getLoginAuthCodeImg" />
+        </div>
+        <button type="submit" class="submit-btn">登录</button>
+    </form>
+  </div>
+  <div class="toast">请输入用户名</div>
+  <script type="text/javascript" src="./dist/js/main.js"></script>
+  <script>
+    $(function () {
+      var $toast = $('.toast');
+      function toast (text) {
+        $toast.text(text).addClass('show');
+        setTimeout(function () {
+          $toast.removeClass('show');
+        }, 1500);
+      }
+      $(".loginForm").submit(function (e) {
+        e.preventDefault();
+        var username = $('.username').val();
+        var password = $('.password').val();
+        var code = $('.code').val();
+        if (!username) {
+          toast('请输入用户名');
+        } else if (!password) {
+          toast('请输入密码');
+        } else if (!code) {
+          toast('请输入验证码');
+        }
+        $.ajax({
+          type:'POST',
+          url: 'http://monitor.mysirui.com/purview/user/login?name=' + username + '&password=' + password + '&authcode=' + code,
+          async: false,
+          dataType: 'jsonp',
+          xhrFields: {
+            withCredentials: true
+          },
+          crossDomain: true,
+          success: function (data) {
+            alert(data.result.resultCode);
+            if (!data.result.resultCode) {
+              toast('登录成功');
+              setTimeout(function () {
+                window.location.href = 'index.html';
+              }, 2000);
+            } else {
+              toast(data.result.resultMessage);
+            }
+          },
+          error: function (err) {
+            console.log(err);
+          }
+        })
+      })
+    });
+  </script>
+</body>
+</html>
