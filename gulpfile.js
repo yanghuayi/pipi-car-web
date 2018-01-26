@@ -48,13 +48,14 @@ gulp.task('clean', function () {
 gulp.task('connect', function () {
   connect.server({
     root: '',
-    host: '192.168.1.240',
+    host: '192.168.6.239',
     livereload: true,
     port: 3000,
     middleware: function(connect, opt) {
       return [
         proxy('/api',  {
-          target: 'http://monitor.mysirui.com',
+          target: 'http://monitor.mysirui.com/',
+          pathRewrite: {'^/api' : '/'},
           changeOrigin:true
         }),
       ]

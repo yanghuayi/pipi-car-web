@@ -20,17 +20,9 @@
         <button type="submit" class="submit-btn">登录</button>
     </form>
   </div>
-  <div class="toast">请输入用户名</div>
   <script type="text/javascript" src="./dist/js/main.js"></script>
   <script>
     $(function () {
-      var $toast = $('.toast');
-      function toast (text) {
-        $toast.text(text).addClass('show');
-        setTimeout(function () {
-          $toast.removeClass('show');
-        }, 1500);
-      }
       $(".loginForm").submit(function (e) {
         e.preventDefault();
         var username = $('.username').val();
@@ -56,12 +48,13 @@
           crossDomain: true,
           success: function (data) {
             if (!data.result.resultCode) {
-              toast('登录成功');
+              SIRUI.toast('登录成功');
               setTimeout(function () {
                 window.location.href = 'index.html';
               }, 2000);
             } else {
-              toast(data.result.resultMessage);
+              SIRUI.toast(data.result.resultMessage);
+              $('.code-img').src($('.code-img').src() + Math.random());
             }
           },
           error: function (err) {

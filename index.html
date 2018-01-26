@@ -8,92 +8,108 @@
   <title>安装测试工具</title>
 </head>
 <body>
-  <div class="home">
-    <header class="header">
-      <i class="iconfont left-icon">&#xe6db;</i>
-      <h1 class="title"><span way-data="home.name"></span><i class="iconfont arrow">&#xe645;</i></h1>
-    </header>
-    <div class="car-box">
-    </div>
-    <div class="state-one">
-      <i class="iconfont left-icon">&#xe6df;</i>
-      <i class="iconfont right-icon">&#xe6de;</i>
-    </div>
-    <div class="state-two">
-      <div class="bg-btm">
-        <ul class="state-list">
-          <li>
-            <i class="iconfont ">&#xe6dc;</i>
-            <span class="txt">12℃</span>
-          </li>
-          <li>
-            <i class="iconfont gps">&#xe6dd;</i>
-            <span class="txt">4</span>
-          </li>
-          <li class="center start-btn">
-            <div class="hover"></div>
-          </li>
-          <li>
-            <i class="iconfont voltage">&#xe6d9;</i>
-            <span class="txt">11V</span>
-          </li>
-          <li>
-            <i class="iconfont signal">&#xe6da;</i>
-            <span class="txt">———</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="state-three">
+<div class="home">
+  <header class="header">
+    <i class="iconfont left-icon">&#xe6db;</i>
+    <h1 class="title"><span way-data="home.name"></span><i class="iconfont arrow">&#xe645;</i></h1>
+  </header>
+  <div class="car-box">
+  </div>
+  <div class="state-one">
+    <i class="iconfont left-icon">&#xe6df;</i>
+    <i class="iconfont right-icon">&#xe6de;</i>
+  </div>
+  <div class="state-two">
+    <div class="bg-btm">
       <ul class="state-list">
         <li>
-          <div class="btn top"></div>
-          <div class="btn bottom"></div>
-          <p class="txt">车锁</p>
+          <i class="iconfont temperature">&#xe6dc;</i>
+          <span class="txt">12℃</span>
         </li>
         <li>
-          <div class="btn"></div>
-          <p class="txt">熄火</p>
+          <i class="iconfont gps">&#xe6dd;</i>
+          <span class="txt">4</span>
+        </li>
+        <li class="center start-btn">
+          <div class="hover"></div>
         </li>
         <li>
-            <div class="btn"></div>
-            <p class="txt">寻车</p>
+          <i class="iconfont voltage">&#xe6d9;</i>
+          <span class="txt">11V</span>
+        </li>
+        <li>
+          <i class="iconfont signal">&#xe6da;</i>
+          <span class="txt">———</span>
         </li>
       </ul>
     </div>
   </div>
-  <script type="text/javascript" src="./dist/js/main.js"></script>
-  <script type="text/javascript">
-    var pageData = {};
-    function update () {
-      $.ajax({
-        type: 'GET',
-        async: false,
-        url: '/api/om/om/getDeviceStatus?search=imei_869651023637275',
-        dataType: 'jsonp',
-        success: function (data) {
-          if (data.result.resultCode == 3) {
-            // 登陆超时
-            window.location.href = 'login.html';
-          } else if (data.result.resultCode) {
-            // 其他请求错误类型
-          } else {
-            // 获取数据成功
-            pageData = data.entity[0];
-          }
-        },
-        error: function (err) {
-          console.log(err);
+  <div class="state-three">
+    <ul class="state-list">
+      <li>
+        <div class="btn top"></div>
+        <div class="btn bottom"></div>
+        <p class="txt">车锁</p>
+      </li>
+      <li>
+        <div class="btn"></div>
+        <p class="txt">熄火</p>
+      </li>
+      <li>
+        <div class="btn"></div>
+        <p class="txt">寻车</p>
+      </li>
+    </ul>
+  </div>
+</div>
+<script type="text/javascript" src="./dist/js/main.js"></script>
+<script type="text/javascript">
+  var pageData = {};
+
+  function update() {
+    $.ajax({
+      type: 'GET',
+      async: false,
+      url: '/api/om/om/getDeviceStatus?search=imei_869651023637275',
+      dataType: 'jsonp',
+      success: function (data) {
+        if (data.result.resultCode == 3) {
+          // 登陆超时
+          window.location.href = 'login.html';
+        } else if (data.result.resultCode) {
+          // 其他请求错误类型
+        } else {
+          // 获取数据成功
+          pageData = data.entity[0];
+          updateData();
         }
-      });
-    }
-    $(function () {
-      way.set('home', {name: '渝B·CJ111'});
-      $('.start-btn').click(function () {
-        $(this).addClass('active');
-      });
-      update();
+      },
+      error: function (err) {
+        console.log(err);
+      }
     });
-  </script>
+  }
+
+  function updateData() {
+    if (parseInt(pageData.gpsstatus)) {
+      $('.gps').addClass('c-red');
+    } else {
+      $('.gps').addClass('c-green');
+    }
+
+  }
+
+  $(function () {
+    way.set('home', {name: '渝B·CJ111'});
+    $('.start-btn').click(function () {
+      if (pageData.status == 4) {
+        SIRUI.toast('<font color=red>该设备已经激活,无法测试控制功能!</font>', '#fff');
+      } else {
+        
+      }
+    });
+    update();
+  });
+</script>
 </body>
 </html>
