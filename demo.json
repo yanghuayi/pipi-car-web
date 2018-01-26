@@ -1,0 +1,45 @@
+{
+  "entity": [
+    {
+      "a_name": "btu.CC2640.0ost.base.103b",
+      "a_version": "0116.release.003060701.release.1",
+      "acc": "2",
+      "barcode": "VM00-10601-G1S003-207",
+      "brandID": 0,
+      "clientType": 3,
+      "defence": "",
+      "devicestatusrefreshtime": "",
+      "electricity": "12.9",
+      "enginestatus": "",
+      "exhibitionState": 0,
+      "gpsSyncTime": "2018-01-25 08:11:08",
+      "gpsantenna": "1",
+      "gpsstatus": "0",
+      "gpstime": "2018-01-25 08:11:06",
+      "imei": "869651023637275",
+      "isExhibitionTer": false,
+      "isOneDayReport": false,
+      "isTcpLongConnection": false,
+      "isonline": "1",
+      "lat": "29.621741807725694",
+      "latestmessagetime": "",
+      "lng": "106.49013699001736",
+      "msisdn": "1064803631684",
+      "obddigconn": "2",
+      "pics": "om-install-record/201612/2a37e8e0-ff18-4438-9134-0d92a46fd5a1.jpg,om-install-record/201612/c055858b-1f7e-453c-bf8e-2df825bc0159.jpg",
+      "seriesID": 0,
+      "signalstrength": "19",
+      "startnumber": "9",
+      "status": "4",
+      "terminalid": "23004",
+      "vehicleModelID": 0,
+      "vinPic": "om-install-record/201612/1da0c6d5-b38b-479f-a8e7-0423bbfa9098.jpg",
+      "wgLightAlarmTime": ""
+    }
+  ],
+  "option": {},
+  "result": {
+    "resultCode": 0,
+    "resultMessage": ""
+  }
+}

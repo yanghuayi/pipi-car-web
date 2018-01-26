@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">  
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="./dist/css/main.css">
   <title>安装测试工具</title>
@@ -15,7 +15,7 @@
         <input type="password" class="password" placeholder="密码" />
         <div class="code-wrap">
           <input type="text" class="code" placeholder="验证码">
-          <img class="code-img" src="http://monitor.mysirui.com/provider/testProvide/getLoginAuthCodeImg" />
+          <img class="code-img" src="/api/provider/testProvide/getLoginAuthCodeImg" />
         </div>
         <button type="submit" class="submit-btn">登录</button>
     </form>
@@ -38,14 +38,16 @@
         var code = $('.code').val();
         if (!username) {
           toast('请输入用户名');
+          return false;
         } else if (!password) {
           toast('请输入密码');
+          return false;
         } else if (!code) {
           toast('请输入验证码');
+          return false;
         }
         $.ajax({
-          type:'POST',
-          url: 'http://monitor.mysirui.com/purview/user/login?name=' + username + '&password=' + password + '&authcode=' + code,
+          url: '/api/purview/user/login?name=' + username + '&password=' + password + '&authcode=' + code,
           async: false,
           dataType: 'jsonp',
           xhrFields: {
@@ -53,7 +55,6 @@
           },
           crossDomain: true,
           success: function (data) {
-            alert(data.result.resultCode);
             if (!data.result.resultCode) {
               toast('登录成功');
               setTimeout(function () {
