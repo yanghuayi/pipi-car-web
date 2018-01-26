@@ -22,23 +22,23 @@
   <div class="state-two">
     <div class="bg-btm">
       <ul class="state-list">
-        <li>
+        <li class="li_wd">
           <i class="iconfont temperature">&#xe6dc;</i>
           <span class="txt">12℃</span>
         </li>
-        <li>
+        <li class="li_gps">
           <i class="iconfont gps">&#xe6dd;</i>
           <span class="txt">4</span>
         </li>
         <li class="center start-btn">
           <div class="hover"></div>
         </li>
-        <li>
+        <li class="li_dy">
           <i class="iconfont voltage">&#xe6d9;</i>
           <span class="txt">11V</span>
         </li>
-        <li>
-          <i class="iconfont signal">&#xe6da;</i>
+        <li class="li_signal">
+          <i class="iconfont signal"></i>
           <span class="txt">———</span>
         </li>
       </ul>
@@ -62,15 +62,16 @@
     </ul>
   </div>
 </div>
+
 <script type="text/javascript" src="./dist/js/main.js"></script>
 <script type="text/javascript">
   var pageData = {};
-
+  var imei = '869651023637275';
   function update() {
     $.ajax({
       type: 'GET',
       async: false,
-      url: '/api/om/om/getDeviceStatus?search=imei_869651023637275',
+      url: '/api/om/om/getDeviceStatus?search=imei_' + imei,
       dataType: 'jsonp',
       success: function (data) {
         if (data.result.resultCode == 3) {
@@ -80,7 +81,42 @@
           // 其他请求错误类型
         } else {
           // 获取数据成功
-          pageData = data.entity[0];
+          ROWS = data.entity; // 复制全局变量
+          // 遍历重新封装数据
+          IDARR = new Array(); // 记录id
+          OBJARR = new Array(); // 记录对象
+
+          for (var i = 0; i < data.entity.length; i++) {
+            if (IDARR.indexOf(data.entity[i].terminalid)) { // 在数组中
+              // OBJARR[OBJARR.length-1].push(data.entity[i]);//存入最后一个
+            } else {
+              var temp = new Array();
+              temp.push(data.entity[i]);
+              OBJARR.push(temp);
+              IDARR.push(data.entity[i].terminalid);
+            }
+          }
+
+          // 开始处理数据
+          var arr = new Array();
+          for (var i = 0; i < ROWS.length; i++) {
+            var obj = ROWS[i];
+            if (obj.imei == imei) {
+              arr.push(obj);
+            }
+          }
+
+          var html = SIRUI.getHtmlData(imei, arr);
+          // var clientType = getTerminalClientType(imei, arr);
+          // if (html != false) {
+          //   if(clientType == 17){//wg设备的
+          //     $("#wg_test_info").html(html);
+          //     goToAnchor("wgTest");
+          //   }else{//原来的设备的
+          //     $("#test_info").html(html);
+          //     goToAnchor("test");
+          //   }
+          // }
           updateData();
         }
       },
@@ -105,7 +141,7 @@
       if (pageData.status == 4) {
         SIRUI.toast('<font color=red>该设备已经激活,无法测试控制功能!</font>', '#fff');
       } else {
-        
+        SIRUI.control('qd');
       }
     });
     update();

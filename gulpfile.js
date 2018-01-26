@@ -48,7 +48,7 @@ gulp.task('clean', function () {
 gulp.task('connect', function () {
   connect.server({
     root: '',
-    host: '192.168.6.239',
+    host: '192.168.1.240',
     livereload: true,
     port: 3000,
     middleware: function(connect, opt) {
@@ -82,6 +82,7 @@ gulp.task('minifyjs', function () {
   return gulp.src('js/*.js')
     .pipe(order([
       'jquery.min.js',
+      'SIRUI_TOOLS.js',
       '*.js'
     ]))
     .pipe(concat('main.js'))    //合并所有js到main.js

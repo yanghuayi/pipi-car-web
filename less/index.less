@@ -67,6 +67,28 @@
           display: block;
           font-size: 30px;
           color: #fff;
+          &.signal {
+            &::before {
+              content: '\e6bd';
+              color: #999;
+            }
+            &.signal_1::before {
+              content: '\e6ba';
+              color: rgb(23, 170, 255);
+            }
+            &.signal_2::before {
+              content: '\e6bc';
+              color: rgb(23, 170, 255);
+            }
+            &.signal_3::before {
+              content: '\e6bb';
+              color: rgb(23, 170, 255);
+            }
+            &.signal_4::before {
+              content: '\e6bd';
+              color: rgb(23, 170, 255);
+            }
+          }
         }
         .txt {
           font-size: 14px;
