@@ -9,7 +9,7 @@ var MODELLIST = "";
 var SERIESMAP = new Map();// 用于缓存
 var MODELMAP = new Map();// 用于缓存
 
-SIRUI.control = function(cmd) {
+SIRUI.control = function(cmd, callBack) {
   var imei = $("#currentIMEI").val();
 	// 找出设备状态
 	var hasControlRight = false;
@@ -24,11 +24,11 @@ SIRUI.control = function(cmd) {
 			i = OBJARR.length - 1; // 循环结束
 		}
 	}
-
 	if (!hasControlRight) {
 		SIRUI.toast("<font color=red>该设备已经激活,无法测试控制功能!</font>", '#fff');
-		return null;
+		return false;
 	}
+
 	if (cmd == "km") {
 		cmd = "1283";
 	} else if (cmd == "gm") {
@@ -45,30 +45,30 @@ SIRUI.control = function(cmd) {
 		cmd = "1290";
 	}
 	SIRUI.showLoad("正在发送指令,请稍候...");
-	$.post(WEBROOT + "/om/om/control", {
+
+	$.post("/api/om/om/control", {
 		cmd : cmd,
 		imei : imei
 	}, function(data, textStatus) {
-		$.ui.hideMask(); // 取消mask
-		$("#mask").remove();
+		SIRUI.hideLoad();
 		if (data.result.resultCode == 3) {// session已将超时,不需要再发送请求.
 			alert("会话超时,请重新登录...");
-			window.location.reload();
+			window.location.href = '/login.html';
 			return;
 		} else if (data.result.resultCode == 0) { // 成功
 			var code = data.result.resultMessage.split("hy@@")[0];
 			var msg = data.result.resultMessage.split("hy@@")[1];
-			$("#afui").popup("返回状态码: <font color=red>" + code + "</font> ; 消息:" + msg);
+			SIRUI.toast("返回状态码: <font color=red>" + code + "</font> ; 消息:" + msg);
+			callBack ? callBack() : null;
 		} else {
-			$("#afui").popup({
+			SIRUI.alert({
 				message : data.result.resultMessage,
 				title : "提醒",
-				cancelText : "取消",
-				doneText : "确定"
 			});
 		}
 	}, "json");
 }
+
 SIRUI.getTerminalObj = function (imei, arr) {
 	var obj = "";
 	for (var i = 0; i < arr.length; i++) {
@@ -82,6 +82,7 @@ SIRUI.getTerminalObj = function (imei, arr) {
 	}
 	return obj;
 }
+
 SIRUI.getHtmlData = function (imei, arr) {
 	var obddigconn;
 	var clientType = 0;
@@ -91,7 +92,9 @@ SIRUI.getHtmlData = function (imei, arr) {
 			return false;
 		}
     // 终端状态
-		barcode = obj.barcode;
+		$('#barcode').html(obj.barcode);
+		$('#IMEI').html($("#currentIMEI").val());
+
 		if (obj.status == "1") {
 			var status = "待发货";
 			SIRUI.alert({
@@ -113,7 +116,9 @@ SIRUI.getHtmlData = function (imei, arr) {
 			status = "已激活账号";
 		} else if (obj.status == "5") {
 			status = "待检测维修";
-    }
+		}
+		$('#status').html(status);
+
     // GPS 天线状态
     var $li_gps = $('.li_gps');
 		if (obj.gpsantenna == "0" || obj.gpsantenna == "") {
@@ -166,28 +171,42 @@ SIRUI.getHtmlData = function (imei, arr) {
 			$li_signal.find('.txt').addClass('c-red').html('不在线');
     }
 
-		// var cjhm = obj.msisdn;
+		var cjhm = obj.msisdn;
 		// ACC状态 0:无效 1:开 2:关
-		// if (obj.acc == null || obj.acc == "") {
-		// 	acc = "<font color=orange>未知</font>";
-		// } else if (obj.acc == "0") {
-		// 	acc = "<font color=orange>无效</font>";
-		// } else if (obj.acc == "1") {
-		// 	acc = "<font color=green>开</font>";
-		// } else if (obj.acc == "2") {
-		// 	acc = "<font color=red>关</font>";
-		// }
+		if (obj.acc == null || obj.acc == "") {
+			acc = "<font color=orange>未知</font>";
+		} else if (obj.acc == "0") {
+			acc = "<font color=orange>无效</font>";
+		} else if (obj.acc == "1") {
+			acc = "<font color=green>开</font>";
+		} else if (obj.acc == "2") {
+			acc = "<font color=red>关</font>";
+		}
+		$('#ACC').html(acc);
 		// OBD诊断链接状态
-		// if (obj.obddigconn == null || obj.obddigconn == "") {
-		// 	obddigconn = "<font color=orange>未知</font>";
-		// } else if (obj.obddigconn == "0") {
-		// 	obddigconn = "<font color=orange>无效</font>";
-		// } else if (obj.obddigconn == "1") {
-		// 	obddigconn = "<font color=green>正常</font>";
-		// } else if (obj.obddigconn == "2") {
-		// 	obddigconn = "<font color=red>异常</font>";
-		// }
-
-		// clientType = obj.clientType;
+		if (obj.obddigconn == null || obj.obddigconn == "") {
+			obddigconn = "<font color=orange>未知</font>";
+		} else if (obj.obddigconn == "0") {
+			obddigconn = "<font color=orange>无效</font>";
+		} else if (obj.obddigconn == "1") {
+			obddigconn = "<font color=green>正常</font>";
+		} else if (obj.obddigconn == "2") {
+			obddigconn = "<font color=red>异常</font>";
+		}
+		$('#OBD').html(obddigconn);
+		// 外挂设备
+		var obj = arr[0];
+		var html = '';
+		for (var i = 0, count = 0; i < obj.a_name.split(";").length; i++) {
+			if (obj.a_name.split(";")[i] != "") {
+				count++;
+				html += "<li class='plugin-li'><span class='label'>外挂设备" + (i + 1) + "：</span><span class='value'><font color=green>" + obj.a_name.split(";")[i] + "</font>;&nbsp;版本:<font color=green>" + obj.a_version.split(";")[i] + "</font></span></li>";
+			}
+		}
+		if (count == 0) {
+			html += "<li class='plugin-li'><span style=\"color:green\">无外挂设备</span></li>";
+		}
+		$('.plugin-li').remove();
+    $('.msg-list').append(html);
   }
 };

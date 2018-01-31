@@ -9,14 +9,16 @@ var SIRUI = {};
  * toast 模块
  */
 SIRUI.toast = function (text, backgourndColor) {
-  var $toast = $('.toast');
+  var $toast = $('.sirui_toast');
   $toast.css('background', 'rgba(0, 0, 0, .7)');
+  $('body').append('<div class="sirui_mask"></div>');
   if (backgourndColor) {
     $toast.css('background', backgourndColor);
   }
   $toast.html(text).addClass('show');
   setTimeout(function () {
     $toast.removeClass('show');
+    $('.sirui_mask').remove();
   }, 1500);
 }
 /**
@@ -47,3 +49,27 @@ SIRUI.showLoad = function (text) {
 SIRUI.hideLoad = function (text) {
   $('.sirui_mask').remove();
 }
+/**
+ * 获取URL参数模块
+ */
+SIRUI.getUrlParam = function (paraName) {
+  var url = document.location.toString();
+  var arrObj = url.split("?");
+
+  if (arrObj.length > 1) {
+    var arrPara = arrObj[1].split("&");
+    var arr;
+
+    for (var i = 0; i < arrPara.length; i++) {
+      arr = arrPara[i].split("=");
+
+      if (arr != null && arr[0] == paraName) {
+        return arr[1];
+      }
+    }
+    return "";
+  }
+  else {
+    return "";
+  }
+};

@@ -1,7 +1,50 @@
 .home {
-  height: 100vh;
-  background: url('../images/ditu@2x.png');
-  background-size: cover;
+  position: absolute;
+  padding-bottom:  60px;
+  /* Prevent elements to be highlighted on tap */
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+
+  /* Put the scroller into the HW Compositing layer right from the start */
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  -o-transform: translateZ(0);
+  transform: translateZ(0);
+  #pulldown {
+    text-align: center;
+    font-size: 14px;
+    color: #fff;
+    padding: 20px 0;
+    &.loading {
+      .reloading {
+        top: 0px;
+      }
+    }
+    .loaded {
+      .reloading {
+        top: -50px;
+        transition: all .2s ease-in-out;
+      }
+      .txt {
+        top: 0px;
+      }
+    }
+    .txt {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      transition: all .2s ease-in-out;
+      top: -550px;
+    }
+    .reloading {
+      position: absolute;
+      top: -50px;
+      width: 50px;
+      left: 50%;
+      margin-left: -25px;
+      transition: all .1s ease-in-out;
+    }
+  }
   .header {
     height: 60px;
     color: #fff;
@@ -26,7 +69,7 @@
     }
   }
   .car-box {
-    height: 30%;
+    height: 30vh;
     background-image: url('../images/che@2x.png');
     background-size: 80% auto;
     background-position: center;
@@ -164,7 +207,7 @@
               background-image: url('../images/xihuo ing@2x.png');
             }
           }
-        } 
+        }
         &:nth-child(3) {
           .btn {
             height: 80px;
@@ -174,7 +217,7 @@
               background-image: url('../images/xunche ing@2x.png');
             }
           }
-        } 
+        }
       }
     }
   }
@@ -187,4 +230,73 @@
   to {
     transform: rotate(360deg);
   }
+}
+.msg-list {
+  padding: 0 5%;
+  li {
+    line-height: 40px;
+    font-size: 14px;
+  }
+}
+.map-wrap {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #fff;
+  color: #333;
+  .tit {
+    background-color: #68a6ff;
+    line-height: 50px;
+    font-size: 16px;
+    text-align: center;
+    position: relative;
+    color: #fff;
+    .iconfont {
+      position: absolute;
+      right: 3%;
+      font-size: 30px;
+      color: #fff;
+    }
+  }
+  .time {
+    line-height: 40px;
+    font-size: 14px;
+    padding: 0 5%;
+  }
+  .address {
+    line-height: 40px;
+    font-size: 14px;
+    padding: 0 5%;
+    color: #EC842D;
+  }
+  #map {
+    height: e('calc(100% - 150px)');
+    background-color: #ececec;
+    margin: 0 5%;
+  }
+}
+#wrapper {
+  background: url('../images/ditu@2x.png');
+  background-size: cover;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  /* Prevent native touch events on Windows */
+  -ms-touch-action: none;
+
+  /* Prevent the callout on tap-hold and text selection */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  /* Prevent text resize on orientation change, useful for web-apps */
+  -webkit-text-size-adjust: none;
+  -moz-text-size-adjust: none;
+  -ms-text-size-adjust: none;
+  -o-text-size-adjust: none;
+  text-size-adjust: none;
 }

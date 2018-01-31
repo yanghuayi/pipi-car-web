@@ -7,66 +7,108 @@
   <link rel="stylesheet" href="./dist/css/main.css">
   <title>安装测试工具</title>
 </head>
-<body>
-<div class="home">
-  <header class="header">
-    <i class="iconfont left-icon">&#xe6db;</i>
-    <h1 class="title"><span way-data="home.name"></span><i class="iconfont arrow">&#xe645;</i></h1>
-  </header>
-  <div class="car-box">
-  </div>
-  <div class="state-one">
-    <i class="iconfont left-icon">&#xe6df;</i>
-    <i class="iconfont right-icon">&#xe6de;</i>
-  </div>
-  <div class="state-two">
-    <div class="bg-btm">
+<body style="overflow:hidden;">
+<div id="wrapper">
+  <div id="scroller" class="home">
+    <div id="pulldown">
+      <img src="./dist/images/loading.svg" class="reloading" alt="">
+      <p class="txt">刷新成功</p>
+    </div>
+    <header class="header">
+      <i class="iconfont left-icon" id="mapBtn">&#xe6db;</i>
+      <h1 class="title"><span way-data="home.name"></span><i class="iconfont arrow">&#xe645;</i></h1>
+    </header>
+    <div class="car-box">
+    </div>
+    <div class="state-one">
+      <i class="iconfont left-icon">&#xe6df;</i>
+      <i class="iconfont right-icon">&#xe6de;</i>
+    </div>
+    <div class="state-two">
+      <div class="bg-btm">
+        <ul class="state-list">
+          <li class="li_wd">
+            <i class="iconfont temperature">&#xe6dc;</i>
+            <span class="txt">12℃</span>
+          </li>
+          <li class="li_gps">
+            <i class="iconfont gps">&#xe6dd;</i>
+            <span class="txt">4</span>
+          </li>
+          <li class="center start-btn">
+            <div class="hover"></div>
+          </li>
+          <li class="li_dy">
+            <i class="iconfont voltage">&#xe6d9;</i>
+            <span class="txt">11V</span>
+          </li>
+          <li class="li_signal">
+            <i class="iconfont signal"></i>
+            <span class="txt">———</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="state-three">
       <ul class="state-list">
-        <li class="li_wd">
-          <i class="iconfont temperature">&#xe6dc;</i>
-          <span class="txt">12℃</span>
+        <li>
+          <div class="btn top" onclick="SIRUI.control('gm')"></div>
+          <div class="btn bottom" onclick="SIRUI.control('km')"></div>
+          <p class="txt">车锁</p>
         </li>
-        <li class="li_gps">
-          <i class="iconfont gps">&#xe6dd;</i>
-          <span class="txt">4</span>
+        <li>
+          <div class="btn" onclick="SIRUI.control('xh')"></div>
+          <p class="txt">熄火</p>
         </li>
-        <li class="center start-btn">
-          <div class="hover"></div>
-        </li>
-        <li class="li_dy">
-          <i class="iconfont voltage">&#xe6d9;</i>
-          <span class="txt">11V</span>
-        </li>
-        <li class="li_signal">
-          <i class="iconfont signal"></i>
-          <span class="txt">———</span>
+        <li>
+          <div class="btn" onclick="SIRUI.control('xc')"></div>
+          <p class="txt">寻车</p>
         </li>
       </ul>
     </div>
-  </div>
-  <div class="state-three">
-    <ul class="state-list">
+    <ul class="msg-list">
       <li>
-        <div class="btn top"></div>
-        <div class="btn bottom"></div>
-        <p class="txt">车锁</p>
+        <span class="label">主机编号：</span>
+        <span class="value" id="barcode"></span>
       </li>
       <li>
-        <div class="btn"></div>
-        <p class="txt">熄火</p>
+        <span class="label">IMEI编号：</span>
+        <span class="value" id="IMEI"></span>
       </li>
       <li>
-        <div class="btn"></div>
-        <p class="txt">寻车</p>
+        <span class="label">终端状态：</span>
+        <span class="value" id="status"></span>
+      </li>
+      <li>
+        <span class="label">ACC状态：</span>
+        <span class="value" id="ACC"></span>
+      </li>
+      <li>
+        <span class="label">OBD诊断连接状态：</span>
+        <span class="value" id="OBD"></span>
       </li>
     </ul>
   </div>
 </div>
-
+<input id="currentIMEI" type="hidden" name="currentIMEI">
 <script type="text/javascript" src="./dist/js/main.js"></script>
+<script src="http://api.map.baidu.com/api?v=2.0&ak=K52pNzWT61z1EHvdZptaSmlPRc7mKbjC"></script>
 <script type="text/javascript">
-  var pageData = {};
-  var imei = '869651023637275';
+  function isPassive() {
+    var supportsPassiveOption = false;
+    try {
+      addEventListener("test", null, Object.defineProperty({}, 'passive', {
+        get: function () {
+          supportsPassiveOption = true;
+        }
+      }));
+    } catch(e) {}
+    return supportsPassiveOption;
+  }
+  document.addEventListener('touchmove', function (e) { e.preventDefault(); }, isPassive() ? {
+    capture: false,
+    passive: false
+  } : false);
   function update() {
     $.ajax({
       type: 'GET',
@@ -107,6 +149,13 @@
           }
 
           var html = SIRUI.getHtmlData(imei, arr);
+          setTimeout(function () {
+            $('#pulldown').removeClass('loading').addClass('loaded');
+            myScroll ? myScroll.refresh() : null;
+          }, 1000);
+          setTimeout(function () {
+            $('#pulldown').removeClass('loaded flip');
+          }, 2000);
           // var clientType = getTerminalClientType(imei, arr);
           // if (html != false) {
           //   if(clientType == 17){//wg设备的
@@ -132,20 +181,82 @@
     } else {
       $('.gps').addClass('c-green');
     }
-
   }
-
+  var pageData = {};
+  var imei = SIRUI.getUrlParam('imei');
+  var myScroll;
   $(function () {
-    way.set('home', {name: '渝B·CJ111'});
+    $("#currentIMEI").val(imei);
+    way.set('home', {name: imei});
     $('.start-btn').click(function () {
-      if (pageData.status == 4) {
-        SIRUI.toast('<font color=red>该设备已经激活,无法测试控制功能!</font>', '#fff');
-      } else {
-        SIRUI.control('qd');
-      }
+      SIRUI.control('qd', function () {
+        $('.start-btn').addClass('active');
+      });
+    });
+    $('#mapBtn').click(function () {
+      addMap();
     });
     update();
+    var pullDownEl = document.querySelector('#pulldown');
+    var loadingStep = 0;
+    var pullDownOffset = pullDownEl.offsetHeight;
+    myScroll = new iScroll('wrapper', {
+      useTransition: true,
+      click: true,
+      topOffset: pullDownOffset,
+      onScrollMove: function () {
+        if (this.y > 50) {
+          this.minScrollY = 0;
+          pullDownEl.classList.add('flip');
+        } else {
+          this.minScrollY = -pullDownOffset;
+          pullDownEl.classList.remove('flip');
+        }
+      },
+      onScrollEnd: function () {
+        if (pullDownEl.className.match('flip')) {
+          pullDownEl.classList.add('loading');
+          update();	// Execute custom function (ajax call?)
+        }
+      }
+    });
   });
+
+  function addMap() {
+    var html = '<div class="map-wrap">' +
+      '  <h2 class="tit">当前位置 <i class="iconfont close-btn">&#xe6d5;</i></h2>' +
+      '  <p class="time">' +
+      '    <span class="label">GPS更新时间：</span>' +
+      '    <span class="value">' + ROWS[0].gpstime + '</span>' +
+      '  </p>' +
+      '  <p class="address">' +
+      '    正在获取当前地址。。。' +
+      '  </p>' +
+      '  <div id="map">' +
+      '  </div>' +
+      '</div>';
+    $('body').append(html);
+    var map = new BMap.Map('map');
+    map.centerAndZoom(new BMap.Point(ROWS[0].lng, ROWS[0].lat), 15);
+    map.enableScrollWheelZoom();
+    var marker = new BMap.Marker(new BMap.Point(ROWS[0].lng, ROWS[0].lat));
+    map.addOverlay(marker);
+    $.ajax({
+      url: 'http://api.map.baidu.com/geocoder/v2/?callback=renderReverse&location=' + ROWS[0].lat + ',' + ROWS[0].lng + '&output=json&pois=0&ak=K52pNzWT61z1EHvdZptaSmlPRc7mKbjC',
+      dataType: 'jsonp',
+      success: function (data) {
+        if (data.status == 0) {
+          $('.address').html(data.result.formatted_address);
+        }
+      },
+      error: function (error) {
+        SIRUI.toast(error.message);
+      }
+    });
+    $('.close-btn').click(function () {
+      $('.map-wrap').remove();
+    });
+  }
 </script>
 </body>
 </html>

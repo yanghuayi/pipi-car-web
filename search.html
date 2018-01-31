@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="./dist/css/main.css">
+  <title>安装测试工具</title>
+</head>
+  <div class="search-wrap">
+    <h1 class="title">安装运维测试工具</h1>
+    <div class="input-wrap">
+      <form id="searchForm">
+        <input type="text" name="search" id="" placeholder="请输入IMEI号后6位" />
+        <button type="submit" class="btn">搜索</button>
+      </form>
+    </div>
+    <h3 class="search-msg">
+      <span class="label">你输入的设备号是：</span>
+      <span class="value"></span>
+    </h3>
+    <ul class="search-list">
+    </ul>
+  </div>
+  <script type="text/javascript" src="./dist/js/main.js"></script>
+  <script type="text/javascript">
+    function renderList (data) {
+      var html = '';
+      for (var i in data) {
+        html += '<li><div class="item"><span class="label">IMEI:</span><span class="value imei">' + data[i].imei + '</span> </div>'
+            + '<div class="item"><span class="label">主机编号:</span><span class="value">' + data[i].barcode + '</span> </div>'
+            + '<div class="item"><span class="label">终端状态:</span><span class="value">' + status(data[i].status) + '</span> </div>'
+            + '</li>'
+      }
+      $('.search-list').append(html);
+      $('.search-list li').click(function () {
+        window.location.href = 'index.html?imei=' + $(this).find('.imei').text();
+      })
+    }
+    function status (status)  {
+      if (status == "1") {
+        return "待发货";
+      } else if (status == "2") {
+        return "待测试";
+      } else if (status == "3") {
+        return "已测试";
+      } else if (status == "4") {
+        return "已激活账号";
+      } else if (status == "5") {
+        return "待检测维修";
+      } else if (status == "6") {
+        return "已报废";
+      }
+    }
+    $(function () {
+      $('#searchForm').submit(function (e) {
+        e.preventDefault();
+        searchFun();
+      });
+    });
+    function searchFun () {
+      var $val = $('input[name="search"]').val();
+      if (!$val) {
+        SIRUI.toast('请输入IMEI号后6位');
+        return false;
+      } else {
+        $.ajax({
+          url: '/api/om/om/getDeviceStatus',
+          method: 'POST',
+          data: {
+            search: $val
+          },
+          dataType: 'json',
+          success: function (data) {
+            if (data.result.resultCode == 3) {
+              window.location.href = 'login.html'
+            } else if (data.result.resultCode) {
+              SIRUI.toast(data.result.resultMessage);
+            } else {
+              renderList(data.entity);
+            }
+          },
+          error: function (err) {
+            SIRUI.toast(err.message);
+          }
+        })
+      }
+    }
+  </script>
+</body>
+</html>

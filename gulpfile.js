@@ -63,11 +63,6 @@ gulp.task('connect', function () {
   });
 });
 
-gulp.task('copy', function () {
-  gulp
-    .src([])
-    .pipe(gulp.dest('js'));
-});
 gulp.task('copyFonts', function () {
   gulp
     .src(['fonts/*'])
@@ -92,7 +87,7 @@ gulp.task('minifyjs', function () {
 
 // 构建任务
 gulp.task('build', function (cb) {
-  runSequence('clean', ['copy', 'copyFonts', 'less', 'images', 'minifyjs', 'connect', 'html'], cb);
+  runSequence('clean', ['copyFonts', 'less', 'images', 'minifyjs', 'connect', 'html'], cb);
 });
 
 gulp.task('watch', function () {
